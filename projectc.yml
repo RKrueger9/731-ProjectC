@@ -1,0 +1,42 @@
+---
+- hosts: all
+  vars_files: passwords
+  gather_facts: yes
+  tasks:
+    - name: update apt
+      become: yes
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+
+
+
+
+    - name: Install Docker
+      become: yes
+      apt:
+        name: docker
+        state: present
+        force_apt_get: yes
+
+    - name: Install Docker Compose
+      become: yes
+      apt:
+        name: docker-compose
+        state: present
+        force_apt_get: yes
+
+
+    - name: Clone Project C Github Repository
+      become: yes
+      git:
+        repo: https://github.com/RKrueger9/731-ProjectC
+        dest: /projc
+        clone: yes
+        update: yes
+
+    - name: Start containers
+      become: yes
+      shell: 
+        cmd: docker-compose up --build -d
+        chdir: /projc/
